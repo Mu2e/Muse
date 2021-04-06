@@ -105,6 +105,9 @@ if [ $MUSE_VERBOSE -gt 0 ]; then
     echo "Extra files: $EXTRAS"
 fi
 
+# some regex to categorize dirs
+linkReg="^link/*"
+cvmfsReg="^/cvmfs/*"
 
 # create an empty tarball
 tar -cf $TBALL -T /dev/null
@@ -114,11 +117,43 @@ if [ "$RELEASE" == "false" ] ; then    # for grid tarball
     # also exclude *.cc and .git
     FLAGS=" $FLAGS  -X $MUSE_DIR/config/tarExcludeGrid.txt"
     # put it in a Code subdirectory
+    # last transform prevents /cvmfs from becoming Code/cvmfs
     FLAGS=" $FLAGS  --transform=s|^|Code/|   --transform=s|^Code//cvmfs|/cvmfs|  "
 fi
 
 # tar any extra files
 [ -n "$EXTRAS" ] &&  tar $FLAGS $EXTRAS
+
+
+#
+# examine the PRODUCTS path and if there are local areas, 
+#  then include them in the tarball
+#
+PRODPATH=""
+NPP=0
+for DD in $(echo $PRODUCTS | tr ":" " " )
+do
+    if [[ ! "$DD" =~ $cvmfsReg ]]; then
+	if [ $MUSE_VERBOSE -gt 0  ]; then
+	    echo "taring local PRODUCTS area $DD"
+	fi
+	LPP=localProducts$NPP
+	ln -s $DD $LPP
+	tar $FLAGS -h $LPP
+	rm -f $LPP
+	PRODPATH="\$CODE_DIR/$LPP:$PRODPATH"
+	NPP=$(($NPP+1))
+	echo "DEBUG: $PRODPATH"
+    fi
+done
+if [ -n "$PRODPATH" ]; then
+    PRODPATH="export PRODUCTS=$PRODPATH\$PRODUCTS"
+fi
+
+
+#
+# if tis tarball is for the grid, add a setup file
+#
 
 if [ "$RELEASE" == "false" ] ; then    # for grid tarball
     # create a fake setup.sh 
@@ -126,23 +161,39 @@ if [ "$RELEASE" == "false" ] ; then    # for grid tarball
 	mv setup.sh setup.sh-$(date +%s)
     fi
 
-cat >> setup.sh <<EOF
-setup muse
-CODE_DIR=\$(dirname \$(readlink -f \$BASH_SOURCE))
-muse setup \$CODE_DIR -q $MUSE_BUILD $MUSE_COMPILER_E $MUSE_ENVSET $MUSE_OPTS
-EOF
+    # figure out the ops that are needed explicitly in the setup
+    USE_OPTS="$MUSE_OPTS"
+    [[ ! "$USE_OPTS" =~ "$MUSE_BUILD" ]] && USE_OPTS="$MUSE_BUILD $USE_OPTS"
+    [[ ! "$USE_OPTS" =~ "$MUSE_COMPILER_E" ]] && USE_OPTS="$MUSE_COMPILER_E $USE_OPTS"
+    [[ ! "$USE_OPTS" =~ "$MUSE_ENVSET" ]] && USE_OPTS="$MUSE_ENVSET $USE_OPTS"
 
-#    echo "setup muse" > setup.sh
-#    TEMP=" -q $MUSE_BUILD $MUSE_COMPILER_E $MUSE_ENVSET $MUSE_OPTS"
-#    echo "muse setup Code $TEMP " >> setup.sh
+    #
+    # this is the file that the grid job will source
+    #
+
+cat >> setup.sh <<EOF
+CODE_DIR=\$(dirname \$(readlink -f \$BASH_SOURCE))
+[ -f \$CODE_DIR/setup_pre.sh ] && source \$CODE_DIR/setup_pre.sh
+$PRODPATH
+setup muse
+muse setup \$CODE_DIR -q $USE_OPTS
+[ -f \$CODE_DIR/setup_post.sh ] && source \$CODE_DIR/setup_post.sh
+EOF
 
     tar $FLAGS setup.sh
     rm setup.sh
+
+    # allow user scripts before and after the "muse setup"
+    [ -f setup_pre.sh ] && tar $FLAGS setup_pre.sh
+    [ -f setup_post.sh ] && tar $FLAGS setup_post.sh
 fi
 
+# if muse directory exists, include it
+[ -d muse ] && tar $FLAGS muse
+
+#
 # now the builds
-linkReg="^link/*"
-cvmfsReg="^/cvmfs/*"
+#
 for REPO in $MUSE_REPOS
 do
     # follow links by default
