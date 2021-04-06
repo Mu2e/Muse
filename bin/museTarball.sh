@@ -152,7 +152,7 @@ fi
 
 
 #
-# if tis tarball is for the grid, add a setup file
+# if this tarball is for the grid, add a setup file
 #
 
 if [ "$RELEASE" == "false" ] ; then    # for grid tarball
