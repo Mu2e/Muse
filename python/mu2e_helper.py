@@ -181,9 +181,7 @@ class mu2e_helper:
     #   Make a bin based on binname_main.cc -> binname
     #
     def make_bin( self, target, userlibs=[], otherSource=[]):
-        sourceFiles = []
-        for fn in [ target+"_main.cc" ] + otherSource:
-            sourceFiles.append('#/'+self.srcPath+'/'+fn)
+        sourceFiles =  [ target+"_main.cc" ] + otherSource
         self.env.Program(
             target = '#/'+self.bindir+"/"+target,
             source = sourceFiles,
