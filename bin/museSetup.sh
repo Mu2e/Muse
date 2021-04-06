@@ -171,7 +171,7 @@ fi
 # figure out what environmental UPS setups to run
 #
 # cases allowed so far
-# 1) an explicit qualifier like "-q d000"
+# 1) an explicit qualifier like "-q p000"
 # 2) Offline is local, pgit or a link, and has a .muse, use recommendation there
 # 3) any other local package has a .muse with a recommendation
 # 4) $MUSE_WORK_DIR/uNNN exists, take highest number there
@@ -188,7 +188,9 @@ fi
 
 if [ -z "$MUSE_ENVSET" ]; then
     # look for a local recommendation in a package
-    DIRS=$( find -L . ./link -maxdepth 2 -name .muse | sed -e 's|^\./||' -e 's|/\.muse$||'  |\
+    PP=" . "
+    [ -d link ] && PP=". ./link"
+    DIRS=$( find -L $PP -maxdepth 2 -name .muse | sed -e 's|^\./||' -e 's|/\.muse$||'  |\
       awk '{if($1!="Offline" && $1!="link/Offline") print $0}'  )
     # put these in the front of the search list
     [ -f link/Offline/.muse ] && DIRS="link/Offline $DIRS"
