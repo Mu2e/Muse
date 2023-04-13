@@ -672,6 +672,16 @@ if [ "$QWARN" ]; then
     echo "     inconsistent builds and memory errors."
 fi
 
+#
+# check if we setup an empty directory, if so give a warning
+#
+if [[ -z "$MUSE_REPOS" && -z "$MUSE_BACKING" ]]; then
+    echo
+    echo "Note: your working dir has no buildable or linked repos."
+    echo "This is allowed, but also might indicate a mistake.."
+    echo
+fi
+
 
 #
 # if build area is on cvmfs and contains a setup.sh script, typically written
