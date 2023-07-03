@@ -91,10 +91,14 @@ if [ -d link ]; then
     echo "WARNING - a deprecated link directory exists, but will be ignored"
 fi
 
-if [ -e backing ]; then
+if [ -L backing ]; then
     echo "WARNING - will remove existing backing link:"
     /bin/ls -l backing | awk '{print "    " $NF}'
     /bin/rm backing
+elif [ -e backing ]; then
+    echo "ERROR - backing already exists and not a link"
+    /bin/ls -l backing
+    exit 1
 fi
 
 
