@@ -102,6 +102,14 @@ echo "  MUSE_ART = $MUSE_ART ($(echo $SETUP_ART | awk '{print $2}'))"
 echo "  MUSE_STUB = " $MUSE_STUB
 [ $MUSE_VERBOSE -gt 0 ] && echo "the grid setup file (if any):"
 echo "  MUSE_GRID_SETUP = " $MUSE_GRID_SETUP
+if [ "$MUSE_PRESOURCE" ]; then
+    [ $MUSE_VERBOSE -gt 0 ] && echo "the pre source command:"
+    echo "  MUSE_PRESOURCE = " $MUSE_PRESOURCE
+fi
+if [ "$MUSE_PREBUILD" ]; then
+    [ $MUSE_VERBOSE -gt 0 ] && echo "the pre build command:"
+    echo "  MUSE_PREBUILD = " $MUSE_PREBUILD
+fi
 
 echo
 
