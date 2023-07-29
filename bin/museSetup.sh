@@ -110,7 +110,7 @@ QFOUND=""
 for ARG in "$@"
 do
     if [ "$QFOUND" == "true" ]; then
-        MUSE_QUALS="$MUSE_QUALS $ARG"
+        [ "$ARG" != "-q" ] && MUSE_QUALS="$MUSE_QUALS $ARG"
     elif [ "$ARG" == "-q" ]; then
         QFOUND="true"
     elif [[  "$ARG" == "-h" || "$ARG" == "--help" || "$ARG" == "help" ]]; then
@@ -305,6 +305,13 @@ if [ $MUSE_VERBOSE -gt 0 ]; then
     done
 fi
 
+#
+# include local UPS products
+#
+if [ -d $MUSE_WORK_DIR/artexternals ]; then
+    echo "INFO - Adding \$MUSE_WORK_DIR/artexternals to UPS PRODUCTS path"
+    export PRODUCTS=$MUSE_WORK_DIR/artexternals:$PRODUCTS
+fi
 
 #
 # figure out what environmental UPS setups to run
@@ -402,7 +409,6 @@ if [ -z "$MUSE_ENVSET"  ]; then
     errorMessage
     return 1
 fi
-
 
 if [ $MUSE_VERBOSE -gt 0 ]; then
     echo "INFO - running environmental set $MUSE_ENVSET "

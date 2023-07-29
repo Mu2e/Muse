@@ -54,6 +54,28 @@ do
 done
 
 #
+# if the user set some scripts to run before building
+#
+if [ "$MUSE_PRESOURCE" ]; then
+    echo "Muse presource: $MUSE_PRESOURCE"
+    source $MUSE_PRESOURCE
+    RC=$?
+    if [ $RC -ne 0 ]; then
+        echo "ERROR - MUSE_PRESOURCE returns $RC"
+        exit $RC
+    fi
+fi
+if [ "$MUSE_PREBUILD" ]; then
+    echo "Muse prebuild: $MUSE_PREBUILD"
+    $MUSE_PREBUILD
+    RC=$?
+    if [ $RC -ne 0 ]; then
+        echo "ERROR - MUSE_PREBUILD returns $RC"
+        exit $RC
+    fi
+fi
+
+#
 # now run the local build
 #
 
