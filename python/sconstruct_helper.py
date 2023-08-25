@@ -135,7 +135,15 @@ def libPath(mu2eOpts):
 # These are given to scons using its Evironment.MergeFlags call.
 def mergeFlags(mu2eOpts):
     build = mu2eOpts['build']
-    flags = ['-std=c++17','-Wall','-Wno-unused-local-typedefs','-g',
+
+    std = '-std=c++17'
+    compf = os.environ.get('MUSE_COMPILER_E')
+    if compf :
+        nn = int(compf[1:])
+        if nn >= 27 :
+            std = '-std=c++20'
+
+    flags = [std,'-Wall','-Wno-unused-local-typedefs','-g',
              '-Werror','-Werror=pedantic',
              '-Wl,--no-undefined','-gdwarf-2', '-Wl,--as-needed',
              '-Werror=return-type','-Winit-self','-Woverloaded-virtual' ]
