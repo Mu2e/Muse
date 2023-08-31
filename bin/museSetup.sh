@@ -231,6 +231,8 @@ export MUSE_G4ST=""
 export MUSE_G4VG=""
 export MUSE_TRIGGER=""
 export MUSE_ENVSET=""
+export MUSE_CPPFLAGS=""
+
 
 #
 # now parse the words
@@ -677,6 +679,26 @@ if [ "$QWARN" ]; then
     echo "     such as Offline upstream of TrkAna.  This can lead to "
     echo "     inconsistent builds and memory errors."
 fi
+
+#
+# search .muse files for compiler flags requests
+# using the backing directories in reverse order from above
+# note that the envset could have also added to the flags
+#
+
+for BDIR in $MUSE_BACKING_REV $MUSE_WORK_DIR
+do
+    REPOS=$(/bin/ls -1 $BDIR/*/.muse  2> /dev/null | awk -F/ '{printf "%s ", $(NF-1)}' )
+    for REPO in $REPOS
+    do
+        TEMP="$(cat $BDIR/$REPO/.muse |
+          awk '{if($1=="CPPFLAGS") {for(i=2;i<=NF;i++) printf "%s ", $i;}}')"
+        if [ -n "$TEMP" ]; then
+            [ $MUSE_VERBOSE -gt 0 ] && echo "CPPFLAGS $BDIR/$REPO/.muse adds $TEMP"
+            export MUSE_CPPFLAGS=${MUSE_CPPFLAGS:+$MUSE_CPPFLAGS" "}$TEMP
+        fi
+    done
+done
 
 #
 # check if we setup an empty directory, if so give a warning
