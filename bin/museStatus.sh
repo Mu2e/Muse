@@ -110,6 +110,10 @@ if [ "$MUSE_PREBUILD" ]; then
     [ $MUSE_VERBOSE -gt 0 ] && echo "the pre build command:"
     echo "  MUSE_PREBUILD = " $MUSE_PREBUILD
 fi
+if [ "$MUSE_CPPFLAGS" ]; then
+    [ $MUSE_VERBOSE -gt 0 ] && echo "compile flags requested in .muse files:"
+    echo "  MUSE_CPPFLAGS = " $MUSE_CPPFLAGS
+fi
 
 echo
 

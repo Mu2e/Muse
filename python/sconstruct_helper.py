@@ -143,10 +143,17 @@ def mergeFlags(mu2eOpts):
         if nn >= 27 :
             std = '-std=c++20'
 
+    cppflags = []
+    flagstr = os.environ.get('MUSE_CPPFLAGS')
+    if flagstr :
+        cppflags = flagstr.split()
+
     flags = [std,'-Wall','-Wno-unused-local-typedefs','-g',
              '-Werror','-Werror=pedantic',
              '-Wl,--no-undefined','-gdwarf-2', '-Wl,--as-needed',
-             '-Werror=return-type','-Winit-self','-Woverloaded-virtual' ]
+             '-Werror=return-type','-Winit-self','-Woverloaded-virtual']
+    flags = flags + cppflags
+
     if build == 'prof':
         flags = flags + [ '-O3', '-fno-omit-frame-pointer', '-DNDEBUG' ]
     elif build == 'debug':
