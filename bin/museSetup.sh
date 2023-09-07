@@ -576,6 +576,10 @@ do
             echo "Adding repo path $BUILD"
         fi
 
+        # create INC variables for each Muse repo
+        REPOUPPER=${REPO^^}
+        export ${REPOUPPER}_INC=$BDIR
+
         # add package-generated fcl (trigger) and data (gdml) paths
         # assuming only Offline generates these
         if [ "$REPO" == "Offline" ]; then
