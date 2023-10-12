@@ -10,7 +10,7 @@ usageMuseTarball() {
 
      Make a tarball, ready to be submitted to the grid.  All locally built
      products are tarred, areas on cvmfs are linked.  The tarball defaults to
-     /mu2e/data/users/\$USER/museTarball/tmp.dir/Code.tar.bz2
+     /srv/mu2e/data/users/\$USER/museTarball/tmp.dir/Code.tar.bz2
 
     <global options>
     -v, --verbose  : add verbosity
@@ -42,8 +42,8 @@ if [ $? -ne 0 ]; then
 fi
 eval set -- "$PARAMS"
 
-TMPDIR=/mu2e/data/users/$USER/museTarball
-EXPORTDIR=/mu2e/data/users/$USER/museTarball
+TMPDIR=/srv/mu2e/data/users/$USER/museTarball
+EXPORTDIR=/srv/mu2e/data/users/$USER/museTarball
 EXTRAEXCLUDE=""
 RELEASE=false
 
@@ -169,7 +169,7 @@ PRODPATH=""
 NPP=0
 for DD in $(echo $PRODUCTS | tr ":" " " )
 do
-    if [[ ! "$DD" =~ $cvmfsReg ]]; then
+    if [[ ! "$DD" =~ $cvmfsReg && ! "$DD" =~ "/grid/fermiapp" ]]; then
         if [ $MUSE_VERBOSE -gt 0  ]; then
             echo "taring local PRODUCTS area $DD"
         fi
