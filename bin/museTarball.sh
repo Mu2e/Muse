@@ -10,7 +10,7 @@ usageMuseTarball() {
 
      Make a tarball, ready to be submitted to the grid.  All locally built
      products are tarred, areas on cvmfs are linked.  The tarball defaults to
-     /srv/mu2e/data/users/\$USER/museTarball/tmp.dir/Code.tar.bz2
+     /exp/mu2e/data/users/\$USER/museTarball/tmp.dir/Code.tar.bz2
 
     <global options>
     -v, --verbose  : add verbosity
@@ -42,8 +42,8 @@ if [ $? -ne 0 ]; then
 fi
 eval set -- "$PARAMS"
 
-TMPDIR=/srv/mu2e/data/users/$USER/museTarball
-EXPORTDIR=/srv/mu2e/data/users/$USER/museTarball
+TMPDIR=/exp/mu2e/data/users/$USER/museTarball
+EXPORTDIR=/exp/mu2e/data/users/$USER/museTarball
 EXTRAEXCLUDE=""
 RELEASE=false
 
