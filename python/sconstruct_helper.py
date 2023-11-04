@@ -108,9 +108,9 @@ def cppPath(mu2eOpts):
         path = path + [ os.environ['MU2E_ARTDAQ_CORE_INC' ] ]
     else: # New
         path = path + [ os.environ['ARTDAQ_CORE_MU2E_INC' ] ]
-    if 'PCIE_LINUX_KERNEL_MODULE_INC' in os.environ: # Old
+    if 'PCIE_LINUX_KERNEL_MODULE_INC' in os.environ:
         path = path + [ os.environ['PCIE_LINUX_KERNEL_MODULE_INC' ] ]
-    else: # New
+    elif 'MU2E_PCIE_UTILS_INC' in os.environ:
         path = path + [ os.environ['MU2E_PCIE_UTILS_INC' ] ]
     path = path + [
         os.environ['ARTDAQ_CORE_INC'],
@@ -149,7 +149,12 @@ def mergeFlags(mu2eOpts):
         cppflags = flagstr.split()
 
     flags = [std,'-Wall','-Wno-unused-local-typedefs','-g',
-             '-Werror','-Werror=pedantic',
+             '-Werror','-pedantic',
+             #'-Wtype-limits','-Wno-error=type-limits',
+             #'-Wdeprecated-copy',
+             #'-Wdeprecated-copy-dtor',
+             #'-Wno-error=deprecated-copy',
+             #'-Wno-error=deprecated-copy-dtor',
              '-Wl,--no-undefined','-gdwarf-2', '-Wl,--as-needed',
              '-Werror=return-type','-Winit-self','-Woverloaded-virtual']
     flags = flags + cppflags
