@@ -173,6 +173,8 @@ for sc in ss:
 if ( GetOption('clean') and not COMMAND_LINE_TARGETS):
     sch.extraCleanup(mu2eOpts)
 
+if mu2ePrint > 5:
+    print(env.Dump())
 
 # This tells emacs to view this file in python mode.
 # Local Variables:
