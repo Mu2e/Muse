@@ -91,7 +91,11 @@ def cppPath(mu2eOpts):
         os.environ['HEP_CONCURRENCY_INC'],
         os.environ['SQLITE_INC'],
         os.environ['CETLIB_INC'],
-        os.environ['CETLIB_EXCEPT_INC'],
+        os.environ['CETLIB_EXCEPT_INC']
+        ]
+    if 'NLOHMANN_JSON_INC' in os.environ:
+        path = path + [ os.environ['NLOHMANN_JSON_INC'] ]
+    path = path + [
         os.environ['BOOST_INC'],
         os.environ['CLHEP_INC'] ]
     if 'CPPUNIT_DIR' in os.environ:
@@ -150,11 +154,10 @@ def mergeFlags(mu2eOpts):
 
     flags = [std,'-Wall','-Wno-unused-local-typedefs','-g',
              '-Werror','-pedantic',
-             #'-Wtype-limits','-Wno-error=type-limits',
-             #'-Wdeprecated-copy',
-             #'-Wdeprecated-copy-dtor',
-             #'-Wno-error=deprecated-copy',
-             #'-Wno-error=deprecated-copy-dtor',
+             # add as defaults June 2024
+             # -Wtype-limits -Wimplicit-fallthrough -Wunused-but-set-parameter
+             # add when root and boost are ready
+             #'-Wdeprecated-copy', '-Wdeprecated-copy-dtor',
              '-Wl,--no-undefined','-gdwarf-2', '-Wl,--as-needed',
              '-Werror=return-type','-Winit-self','-Woverloaded-virtual']
     flags = flags + cppflags

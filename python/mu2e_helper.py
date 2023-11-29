@@ -225,15 +225,29 @@ class mu2e_helper:
                                 LIBS=[ userlibs ],
                                 parse_flags=pf_dict
                                 )
+
     #
     #   Make a bin based on binname_main.cc -> binname
     #
     def make_bin( self, target, userlibs=[], otherSource=[]):
+
+        linkf = self.env["LINKFLAGS"]
+        qgsl = 'gsl' in userlibs
+        qopenblas = 'openblas' in userlibs
+        # gsl is not fully in linked, require openblas
+        if qgsl and not qopenblas:
+            raise ValueError("Bin "+target+" has gsl in the link list but not openblas")
+        # force all symbols linked
+        if qgsl or qopenblas:
+            if '-Wl,--as-needed' in linkf:
+                linkf.remove('-Wl,--as-needed')
+
         sourceFiles =  [ target+"_main.cc" ] + otherSource
         self.env.Program(
             target = '#/'+self.bindir+"/"+target,
             source = sourceFiles,
-            LIBS   = userlibs
+            LIBS   = userlibs,
+            LINKFLAGS = linkf
             )
 
     #
