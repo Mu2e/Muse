@@ -94,10 +94,10 @@ env = Environment( CPPPATH = sch.cppPath(mu2eOpts),   # $ART_INC ...
 # compilation_db, starting in version 4
 if mu2eCBD and mu2eOpts['sconsv'][0]>='4':
     cstr = "Wrote "+mu2eOpts['workDir']+'/'+mu2eOpts['buildBase'] \
-               +"/compilation_db.json"
+               +"/compile_commands.json"
     env.Tool('compilation_db', COMPILATIONDB_COMSTR=cstr)
     env['COMPILATIONDB_PATH_FILTER'] = mu2eOpts['buildBase']+'/*'
-    env.CompilationDatabase(mu2eOpts['buildBase']+'/compilation_db.json')
+    env.CompilationDatabase(mu2eOpts['buildBase']+'/compile_commands.json')
 
 
 # Only re-compute an MD5 hash for a build target if the timestamp changed.
