@@ -583,7 +583,7 @@ do
         # add package-generated fcl (trigger) and data (gdml) paths
         # assuming only certain repos generate these
         TEMP=$BDIR/build/$MUSE_STUB
-        if [[ "$REPO" == "Offline" || "$REPO" == "mu2e_trigger_config" ]]; then
+        if [[ "$REPO" == "Offline" || "$REPO" == "mu2e_trig_config" ]]; then
             export FHICL_FILE_PATH=$( mdropit  $FHICL_FILE_PATH $TEMP )
         fi
         if [ "$REPO" == "Offline" ]; then
