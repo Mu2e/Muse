@@ -581,12 +581,15 @@ do
         export ${REPOUPPER}_INC=$BDIR
 
         # add package-generated fcl (trigger) and data (gdml) paths
-        # assuming only Offline generates these
-        if [ "$REPO" == "Offline" ]; then
-            TEMP=$BDIR/build/$MUSE_STUB
+        # assuming only certain repos generate these
+        TEMP=$BDIR/build/$MUSE_STUB
+        if [[ "$REPO" == "Offline" || "$REPO" == "mu2e_trig_config" ]]; then
             export FHICL_FILE_PATH=$( mdropit  $FHICL_FILE_PATH $TEMP )
+        fi
+        if [ "$REPO" == "Offline" ]; then
             export MU2E_SEARCH_PATH=$( mdropit $MU2E_SEARCH_PATH $TEMP )
         fi
+
 
         # libraries built in each package
         export LD_LIBRARY_PATH=$( mdropit $LD_LIBRARY_PATH $BUILD/lib )
