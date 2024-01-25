@@ -91,8 +91,8 @@ env = Environment( CPPPATH = sch.cppPath(mu2eOpts),   # $ART_INC ...
                    SHLINKCOMSTR= linkcomstr
 )
 
-# compilation_db, starting in version 4
-if mu2eCBD and mu2eOpts['sconsv'][0]>='4':
+# make compile_commands file used by code analysis tools
+if mu2eCBD :
     cstr = "Wrote "+mu2eOpts['workDir']+'/'+mu2eOpts['buildBase'] \
                +"/compile_commands.json"
     env.Tool('compilation_db', COMPILATIONDB_COMSTR=cstr)

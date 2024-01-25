@@ -16,9 +16,6 @@ import subprocess
 def mu2eEnvironment():
     mu2eOpts = {}
 
-    # version, like 4_2_0
-    mu2eOpts['sconsv'] = os.environ['SETUP_SCONS'].split()[1].replace('v','')
-
     # the directory that includes local repos and 'build'
     workDir = os.environ['MUSE_WORK_DIR']
 
