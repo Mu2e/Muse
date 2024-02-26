@@ -61,9 +61,9 @@ do
     CURRENTV=$( basename $( readlink -f $MUSINGS/$MM/current ) )
 
     if [ $MUSE_VERBOSE -gt 0  ]; then
-        VLIST=$( ls -1 $MUSINGS/$MM | grep -v current )
+        VLIST=$( ls -1t $MUSINGS/$MM | grep -v current )
     else
-        VLIST=$( ls -1tr $MUSINGS/$MM | grep -v current | tail -3 )
+        VLIST=$( ls -1t $MUSINGS/$MM | grep -v current | head -3 )
     fi
 
     for VV in $VLIST

@@ -73,9 +73,12 @@ def cppPath(mu2eOpts):
     if os.environ.get('MUSE_BACKING') :
         for bdir in os.environ['MUSE_BACKING'].split():
             path.append(bdir)
-    else:
-        # the linked repo style
-        path.append(mu2eOpts["workDir"]+"/link")
+
+    if os.environ.get('MUSE_VIEW_INC') :
+        for vdir in os.environ['MUSE_VIEW_INC'].split(':'):
+            path.append(vdir)
+        # quit now since this should be everything..
+        return path
 
     path = path + [
         os.environ['ART_INC'],

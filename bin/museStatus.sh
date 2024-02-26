@@ -114,6 +114,8 @@ if [ "$MUSE_CPPFLAGS" ]; then
     [ $MUSE_VERBOSE -gt 0 ] && echo "compile flags requested in .muse files:"
     echo "  MUSE_CPPFLAGS = " $MUSE_CPPFLAGS
 fi
+[ $MUSE_VERBOSE -gt 0 ] && echo "if set, use spack insted of UPS:"
+echo "  MU2E_SPACK = " $MU2E_SPACK
 
 echo
 
