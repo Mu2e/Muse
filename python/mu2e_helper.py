@@ -231,7 +231,7 @@ class mu2e_helper:
     #
     def make_bin( self, target, userlibs=[], otherSource=[]):
 
-        linkf = self.env["LINKFLAGS"]
+        linkf = self.env["LINKFLAGS"].copy()
         qgsl = 'gsl' in userlibs
         qopenblas = 'openblas' in userlibs
         # gsl is not fully in linked, require openblas
