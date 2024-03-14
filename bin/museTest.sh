@@ -34,8 +34,9 @@ EOF
 #
 
 museTest_full(){
-    ! git clone -q https://github.com/Mu2e/Offline  && return 1
-    ! git clone -q https://github.com/Mu2e/Production  && return 1
+    git clone -q https://github.com/Mu2e/Offline  || return 1
+    git clone -q https://github.com/Mu2e/Production  || return 1
+    git clone -q https://github.com/Mu2e/mu2e_trig_config  || return 1
     (
         ! source muse setup && exit 1
         ! muse status && exit 1
@@ -191,17 +192,17 @@ museTest_full(){
 
 museTest_mgit(){
 
-    ! git clone -q https://github.com/Mu2e/Production  && return 1
+    git clone -q https://github.com/Mu2e/Production  || return 1
 
-    ! muse backing HEAD  && return 1
+    muse backing HEAD  || return 1
 
-    ! mgit init  && return 1
+    mgit init  || return 1
 
-    ! cd Offline && return 1
-    ! mgit add HelloWorld && return 1
+    cd Offline || return 1
+    mgit add HelloWorld || return 1
     echo "ls of mgit Offline"
     ls -l
-    ! cd .. && return 1
+    cd .. || return 1
 
     (
         ! source muse setup && exit 1
@@ -226,9 +227,9 @@ museTest_mgit(){
             exit 1
         fi
 
-        ! cd Offline && exit 1
-        ! mgit quit &&  exit 1
-        ! cd .. && exit 1
+        cd Offline || exit 1
+        mgit quit ||  exit 1
+        cd .. || exit 1
     )
 
     return 0
