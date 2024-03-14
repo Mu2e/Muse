@@ -592,7 +592,11 @@ do
 
 
         # libraries built in each package
-        export LD_LIBRARY_PATH=$( mdropit $LD_LIBRARY_PATH $BUILD/lib )
+        if [ "$MU2E_SPACK" ]; then
+            export MUSE_LIBRARY_PATH=$( mdropit $MUSE_LIBRARY_PATH $BUILD/lib )
+        else
+            export LD_LIBRARY_PATH=$( mdropit $LD_LIBRARY_PATH $BUILD/lib )
+        fi
         export CET_PLUGIN_PATH=$( mdropit $CET_PLUGIN_PATH $BUILD/lib )
 
         # bins built in each package

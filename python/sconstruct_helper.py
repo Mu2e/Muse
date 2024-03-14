@@ -54,6 +54,11 @@ def mu2eEnvironment():
     else:
         mu2eOpts['trigger'] = 'off'
 
+    if "MU2E_SPACK" in os.environ:
+        mu2eOpts['spack'] = True
+    else:
+        mu2eOpts['spack'] = False
+
     return mu2eOpts
 
 # the list of root libraries
@@ -130,10 +135,55 @@ def cppPath(mu2eOpts):
 def libPath(mu2eOpts):
 
     path = []
-    for dir in os.environ['LD_LIBRARY_PATH'].split(":"):
-        path.append(dir)
+    if 'LD_LIBRARY_PATH' in os.environ:
+        for dir in os.environ['LD_LIBRARY_PATH'].split(":"):
+            path.append(dir)
+    if 'MUSE_LIBRARY_PATH' in os.environ:
+        for dir in os.environ['MUSE_LIBRARY_PATH'].split(":"):
+            path.append(dir)
 
     return path
+
+# create a list of paths to set as RPATH during the link
+def collectRpath(mu2eOpts):
+    paths = []
+    if not mu2eOpts['spack']:
+        return paths
+    # repos in MUSE_WORK_DIR
+    localrepos = os.environ.get('MUSE_LOCAL_REPOS')
+
+    # MUSE_LIBRARY_PATH is filled from
+    # the envset, with paths to the spack environment
+    # and in museSetup, with paths to the local repos
+
+    llp = os.environ.get('MUSE_LIBRARY_PATH')
+    if not llp :
+        return paths
+
+    for pp in llp.split(':'):
+
+        # first see if this is a repo in the working dir
+        localrepo = None
+        if localrepos :
+            for rr in localrepos.split() :
+                test = mu2eOpts['workDir']+"/"+\
+                       mu2eOpts['buildBase']+"/"+rr+"/lib"
+                if pp == test :
+                    # this is a local repo
+                    localrepo = rr
+
+        if localrepo :
+            # set RPATH of other libs relative to the lib being linked
+            paths.append( "\\\$${ORIGIN}/../../" + localrepo + "/lib" )
+        else :
+            # use the full path as RPATH
+            # if it is not local and not on cvmfs, it won't be relocatable
+            if pp.split('/')[1] != "cvmfs" :
+                print("Warning RPATH not on cvmfs, may not work for grid jobs")
+                print("   ",pp)
+            paths.append(pp)
+
+    return paths
 
 # Define the compiler and linker options.
 # These are given to scons using its Evironment.MergeFlags call.
@@ -166,6 +216,11 @@ def mergeFlags(mu2eOpts):
         flags = flags + [ '-O3', '-fno-omit-frame-pointer', '-DNDEBUG' ]
     elif build == 'debug':
         flags = flags + [ '-O0' ]
+
+    rpaths = collectRpath(mu2eOpts)
+    for rp in rpaths :
+        flags.append('-Wl,-rpath,'+rp)
+
     return flags
 
 
