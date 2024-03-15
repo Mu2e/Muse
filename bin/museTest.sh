@@ -358,7 +358,7 @@ if [ $? -ne 0 ]; then
 fi
 eval set -- "$PARAMS"
 
-WORKBASE=/mu2e/data/users/$USER
+WORKBASE=/exp/mu2e/data/users/$USER
 MUSEDIR=none
 EXTRAS=""
 ALLTESTS="full mgit setup backing"
