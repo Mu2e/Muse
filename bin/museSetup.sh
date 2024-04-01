@@ -6,7 +6,7 @@
 museSetupUsage() {
     cat <<EOF
 
-    muse <global options> setup <directory>  <options>
+    muse <global options> setup <directory|musing>  <options>
 
     <global options>
     -v  : add verbosity
@@ -15,8 +15,10 @@ museSetupUsage() {
         If this is present, and is a directory path, then this will be
         set as the Muse working directory.  If not present, then
         the default directory is used as the Muse working directory.
+    <musing>
         Some Muse builds are published on cvmfs (Musings), and you can setup
-        Muse to point to those areas.
+        Muse to point to those areas. A musing name can be followed by
+        a verison number, or without a version, use current recommendation.
 
     <options>
     -h, --help  : print usage
@@ -128,6 +130,34 @@ do
         fi
     fi
 done
+
+#
+# if the command was "muse setup ops" or ana
+# stop processing early - this is just a few setups
+# and does not set MUSE_WORK_DIR, or anything else
+#
+LCARG=$(echo $ARG1 | tr '[:upper:]' '[:lower:]')
+if [[ "$LCARG" == "ops" || "$LCARG" == "ana" ]]; then
+    [ "$LCARG" == "ops" ] && SLETT="o" || SLETT="a"
+
+    # the command could be "muse setup ops -q o123"
+    SFILE=$(echo $MUSE_QUALS | tr -s '[:blank:]' )
+    if [ "$SFILE" ]; then
+        if [[ ! "$SFILE" =~ "$SLETT" ]]; then
+            echo "ERROR - could not interpret quals: $MUSE_QUALS "
+            return 1
+        fi
+        SFILE="$MUSE_ENVSET_DIR/$SFILE"
+        if [ ! -r "$SFILE" ]; then
+            echo "ERROR - could not interpret quals: $MUSE_QUALS "
+            return 1
+        fi
+    else
+        SFILE=$(ls $MUSE_ENVSET_DIR/${SLETT}??? | tail -1)
+    fi
+    source $SFILE
+    return $?
+fi
 
 
 #
