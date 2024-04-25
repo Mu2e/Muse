@@ -93,13 +93,6 @@ if [ -n "$MUSE_ERROR" ]; then
     return 1
 fi
 
-if [ -n "$MUSE_WORK_DIR" ]; then
-    echo "ERROR - Muse already setup for directory "
-    echo "               $MUSE_WORK_DIR "
-    echo "               with OPTS: $MUSE_QUALS"
-    return 1
-fi
-
 #
 # parse args
 #
@@ -159,6 +152,16 @@ if [[ "$LCARG" == "ops" || "$LCARG" == "ana" ]]; then
     return $?
 fi
 
+#
+# error quit, if trying to setup a working dir, but already setup
+#
+
+if [ -n "$MUSE_WORK_DIR" ]; then
+    echo "ERROR - Muse already setup for directory "
+    echo "               $MUSE_WORK_DIR "
+    echo "               with OPTS: $MUSE_QUALS"
+    return 1
+fi
 
 #
 # determine the working dir, and MUSE_WORK_DIR
