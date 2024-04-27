@@ -76,7 +76,11 @@ mdropit() {
     if [ -z "$2" ]; then # existing path was blank
         echo $1
     else
-        echo $(dropit -p $1 -sfe $2)
+        if [ "$MU2E_SPACK" ]; then
+            echo $1:$2
+        else
+            echo $(dropit -p $1 -sfe $2)
+        fi
     fi
 }
 
