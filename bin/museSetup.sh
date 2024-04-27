@@ -235,17 +235,21 @@ fi
 # set the flavor string
 #
 
-if ! which ups >& /dev/null ; then
-    echo "ERROR - could not find ups command, please setup mu2e"
-    errorMessage
-    return 1
-fi
+if [ $MU2E_SPACK ]; then
+    export MUSE_FLAVOR=$MU2E_OSNAME
+else
+    if ! which ups >& /dev/null ; then
+        echo "ERROR - could not find ups command, please setup mu2e"
+        errorMessage
+        return 1
+    fi
 
-export MUSE_FLAVOR=$( ups flavor | awk -F- '{print $3}' )
-if [ -z "$MUSE_FLAVOR" ]; then
-    echo "ERROR - could not run ups flavor, you might need to set UPS_OVERRIDE"
-    errorMessage
-    return 1
+    export MUSE_FLAVOR=$( ups flavor | awk -F- '{print $3}' )
+    if [ -z "$MUSE_FLAVOR" ]; then
+        echo "ERROR - could not run ups flavor, you might need to set UPS_OVERRIDE"
+        errorMessage
+        return 1
+    fi
 fi
 
 #
@@ -344,8 +348,14 @@ fi
 # include local UPS products
 #
 if [ -d $MUSE_WORK_DIR/artexternals ]; then
-    echo "INFO - Adding \$MUSE_WORK_DIR/artexternals to UPS PRODUCTS path"
-    export PRODUCTS=$MUSE_WORK_DIR/artexternals:$PRODUCTS
+    if [ $MU2E_SPACK ]; then
+        echo "ERROR - spack mode cannot add \$MUSE_WORK_DIR/artexternals to UPS PRODUCTS path"
+        errorMessageBad
+        return 1
+    else
+        echo "INFO - Adding \$MUSE_WORK_DIR/artexternals to UPS PRODUCTS path"
+        export PRODUCTS=$MUSE_WORK_DIR/artexternals:$PRODUCTS
+    fi
 fi
 
 #
