@@ -38,8 +38,8 @@ museTest_full(){
     git clone -q https://github.com/Mu2e/Production  || return 1
     git clone -q https://github.com/Mu2e/mu2e_trig_config  || return 1
     (
-        ! source muse setup && exit 1
-        ! muse status && exit 1
+        source muse setup || exit 1
+        muse status || exit 1
         echo "full is building, log file =full/build.log"
         N=$(cat /proc/cpuinfo | grep -c processor)
 
@@ -205,8 +205,8 @@ museTest_mgit(){
     cd .. || return 1
 
     (
-        ! source muse setup && exit 1
-        ! muse status && exit 1
+        source muse setup || exit 1
+        muse status || exit 1
         echo "mgit is building, log file =mgit/build.log"
         N=$(cat /proc/cpuinfo | grep -c processor)
 
@@ -326,7 +326,7 @@ museTest_backing(){
                 echo "[$(date)] backing failed with RC=$RC at test $TN"
                 exit 1
             fi
-            ! source muse setup && exit 1
+            source muse setup || exit 1
             mu2e -c Offline/HelloWorld/test/hello.fcl >& setup_test_${TN}.log
             RC=$?
             if [ $RC -ne 0 ]; then
@@ -361,7 +361,12 @@ eval set -- "$PARAMS"
 WORKBASE=/exp/mu2e/data/users/$USER
 MUSEDIR=none
 EXTRAS=""
-ALLTESTS="full mgit setup backing"
+cat /etc/os-release | grep -i alma > /dev/null && OSNAME="al9" || OSNAME="sl7"
+if [ "OSNAME" == "al9" ]; then
+    ALLTESTS="full setup backing"
+else
+    ALLTESTS="full mgit setup backing"
+fi
 
 while true
 do
@@ -418,7 +423,6 @@ if [ "$MUSEDIR" != "none" ]; then
     alias muse="source muse"
 elif [ -z "$MUSE_DIR" ]; then
     source /cvmfs/mu2e.opensciencegrid.org/setupmu2e-art.sh
-    setup muse
 fi
 
 WORKDIR=$WORKBASE/museTest
