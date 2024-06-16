@@ -77,7 +77,7 @@ mdropit() {
         echo $1
     else
         if [ "$MU2E_SPACK" ]; then
-            echo $1:$2
+            echo $2:$1
         else
             echo $(dropit -p $1 -sfe $2)
         fi

@@ -46,7 +46,7 @@ fi
 # checks
 #
 if [ -z "$MU2E" ]; then
-    echo "ERROR - muse was not setup"
+    echo "ERROR - mu2e was not setup"
     $DONE 1
 fi
 
