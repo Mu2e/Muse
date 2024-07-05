@@ -550,10 +550,6 @@ export MUSE_LINK_ORDER=$(cat $TEMP | sed 's/#.*$//' | tr "\n\t" "  " | tr -s " "
 MUSE_REPOS=""
 MUSE_LOCAL_REPOS=""
 
-# in spack, the root ntuples need LD_LIBRARY_PATH set to find dictionaries
-NEED_NTUPLE_LDD=""
-NTUPLE_LDD=""
-
 for BDIR in $MUSE_BACKING_REV $MUSE_WORK_DIR
 do
 
@@ -678,30 +674,16 @@ do
             export FHICL_FILE_PATH=$( mdropit $FHICL_FILE_PATH $RDIR/$PA )
         done
 
-        # if the repo has the ROOT_NTUPLE flag, then add its libraries to the LD_LIBRARY_PATH
-        RNT_TEST=$(cat $RDIR/.muse | awk '{if($1=="ROOT_NTUPLE") print "RNT"}')
-        if [ "$RNT_TEST" ]; then
-            NEED_NTUPLE_LDD="true"
-            export NTUPLE_LDD=$( mdropit $NTUPLE_LDD $BUILD/lib )
+        # if the repo has the ROOT_LIBRARY_PATH flag, then add its libraries to the path
+        RLP_TEST=$(cat $RDIR/.muse | awk '{if($1=="ROOT_LIBRARY_PATH") print "RLP"}')
+        if [ "$RLP_TEST" ]; then
+            export ROOT_LIBRARY_PATH=$( mdropit $ROOT_LIBRARY_PATH $BUILD/lib )
         fi
-        if [ "$REPO" == "Offline" ]; then
-            # building LD_LIBRARY_PATH for root ntuples in spack
-            export NTUPLE_LDD=$( mdropit $NTUPLE_LDD $BUILD/lib )
-        fi
-
 
     done  # loop over repos in a build area
 
 
 done   # big loop over backing build dirs
-
-# if there is a root ntuple in the build and this is spack, then add Offline and the ntuple repo
-# to LD_LIBRARY_PATH so root can find dictionaries
-if [[ "$MU2E_SPACK" && "$NEED_NTUPLE_LDD" ]]; then
-    [ $MUSE_VERBOSE -gt 0 ] && echo "INFO - Adding LD_LIBRARY_PATH for root ntuples in spack mode"
-    export LD_LIBRARY_PATH=$( mdropit $LD_LIBRARY_PATH $NTUPLE_LDD )
-fi
-
 
 # clean whitespace
 export MUSE_LINK_ORDER=$(echo $MUSE_LINK_ORDER)
