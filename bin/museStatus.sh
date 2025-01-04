@@ -97,7 +97,7 @@ echo "  MUSE_QUALS = " $MUSE_QUALS
 [ $MUSE_VERBOSE -gt 0 ] && echo "envset determines the UPS products to use:"
 echo "  MUSE_ENVSET = " $MUSE_ENVSET
 [ $MUSE_VERBOSE -gt 0 ] && echo "art version number:"
-echo "  MUSE_ART = $MUSE_ART ($(echo $SETUP_ART | awk '{print $2}'))"
+echo "  MUSE_ART = $MUSE_ART ($ART_VERSION)"
 [ $MUSE_VERBOSE -gt 0 ] && echo "build directory stub based on the build options:"
 echo "  MUSE_STUB = " $MUSE_STUB
 [ $MUSE_VERBOSE -gt 0 ] && echo "the grid setup file (if any):"
