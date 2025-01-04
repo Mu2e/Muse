@@ -41,6 +41,18 @@ if [[ "$1" == "-h" || "$1" == "--help" || "$1" == "help" ]]; then
     exit 0
 fi
 
+if [[ "$1" == "HEAD" || "$1" == "head" ]]; then
+    HMUSINGS=/cvmfs/mu2e-development.opensciencegrid.org/museCIBuild
+    for BRANCH in $(ls -1 $HMUSINGS)
+    do
+        (
+            cd $HMUSINGS/$BRANCH
+            ls -ltr | awk -v BR=$BRANCH '{ if(NR>1) printf "%3s %2s %5s %s/%s\n", $6, $7, $8, BR, $9  }'
+        )
+    done
+    exit 0
+fi
+
 MUSINGS=/cvmfs/mu2e.opensciencegrid.org/Musings
 
 if [ -n "$1" ]; then

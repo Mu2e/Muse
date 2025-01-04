@@ -245,7 +245,7 @@ def BaBarLibs():
 # this runs in the scons top source dir, which is MUSE_WORK_DIR
 def sconscriptList(mu2eOpts):
     ss = []
-    for repo in mu2eOpts['repos'].split():
+    for repo in set(mu2eOpts['repos'].split()):
         if not os.path.islink(repo):
             for root, dirs, files in os.walk(repo, followlinks = False):
                 if 'SConscript' in files:
