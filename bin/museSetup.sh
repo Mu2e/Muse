@@ -625,12 +625,14 @@ do
 
         # create INC variables for each Muse repo
         REPOUPPER=${REPO^^}
+        # deal with mu2e-trig-config
+        REPOUPPER=$(echo $REPOUPPER | sed 's/-/_/g')
         export ${REPOUPPER}_INC=$BDIR
 
         # add package-generated fcl (trigger) and data (gdml) paths
         # assuming only certain repos generate these
         TEMP=$BDIR/build/$MUSE_STUB
-        if [[ "$REPO" == "Offline" || "$REPO" == "mu2e_trig_config" ]]; then
+        if [[ "$REPO" == "Offline" || "$REPO" == "mu2e_trig_config" || "$REPO" == "mu2e-trig-config" ]]; then
             export FHICL_FILE_PATH=$( mdropit  $FHICL_FILE_PATH $TEMP )
         fi
         if [ "$REPO" == "Offline" ]; then
@@ -741,6 +743,16 @@ if [ "$QWARN" ]; then
     echo "Warning - found repos in an unexpected link order,"
     echo "     such as Offline upstream of TrkAna.  This can lead to "
     echo "     inconsistent builds and memory errors."
+fi
+
+#
+# mu2e_trig_config was renamed mu2e-trig-config in 3/2025
+# block the case where both end up in the path
+#
+if [[ "$MUSE_REPOS" =~ "mu2e-trig-config" && "$MUSE_REPOS" =~ "mu2e_trig_config" ]]; then
+    echo "ERROR - build contains mu2e_trig_config and mu2e-trig-config, one has to be removed"
+    errorMessageBad
+    return 1
 fi
 
 #
