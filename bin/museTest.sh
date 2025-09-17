@@ -36,7 +36,7 @@ EOF
 museTest_full(){
     git clone -q https://github.com/Mu2e/Offline  || return 1
     git clone -q https://github.com/Mu2e/Production  || return 1
-    git clone -q https://github.com/Mu2e/mu2e_trig_config  || return 1
+    git clone -q https://github.com/Mu2e/mu2e-trig-config  || return 1
     (
         source muse setup || exit 1
         muse status || exit 1
