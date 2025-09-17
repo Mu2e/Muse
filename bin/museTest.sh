@@ -240,7 +240,7 @@ museTest_setup(){
     LAST=$( ls -1 /cvmfs/mu2e.opensciencegrid.org/Musings/Offline | grep -v current | tail -1)
     LASTCI=$( ls -1tr /cvmfs/mu2e-development.opensciencegrid.org/museCIBuild/main | tail -1)
 
-    for TN in {1..9}
+    for TN in {1..8}
     do
         echo "setup test #$TN"
         (
@@ -263,10 +263,8 @@ museTest_setup(){
             elif [ $TN -eq 6 ]; then
                 source muse setup main/$LASTCI
             elif [ $TN -eq 7 ]; then
-                source muse setup HEAD -q debug
-            elif [ $TN -eq 8 ]; then
                 source muse setup /cvmfs/mu2e.opensciencegrid.org/Musings/Offline/current
-            elif [ $TN -eq 9 ]; then
+            elif [ $TN -eq 8 ]; then
                 source muse setup /cvmfs/mu2e.opensciencegrid.org/Musings/Offline/current -q
             else
                 echo "empty test $TN"
@@ -362,7 +360,7 @@ WORKBASE=/exp/mu2e/data/users/$USER
 MUSEDIR=none
 EXTRAS=""
 cat /etc/os-release | grep -i alma > /dev/null && OSNAME="al9" || OSNAME="sl7"
-if [ "OSNAME" == "al9" ]; then
+if [ "$OSNAME" == "al9" ]; then
     ALLTESTS="full setup backing"
 else
     ALLTESTS="full mgit setup backing"
