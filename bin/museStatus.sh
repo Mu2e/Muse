@@ -96,8 +96,12 @@ echo "  MUSE_VERBOSE = " $MUSE_VERBOSE
 echo "  MUSE_QUALS = " $MUSE_QUALS
 [ $MUSE_VERBOSE -gt 0 ] && echo "envset determines the UPS products to use:"
 echo "  MUSE_ENVSET = " $MUSE_ENVSET
-[ $MUSE_VERBOSE -gt 0 ] && echo "art version number:"
-echo "  MUSE_ART = $MUSE_ART ($ART_VERSION)"
+TEXT="  "
+TEXT="$TEXT  art@${ART_VERSION}"
+TEXT="$TEXT  root@${ROOT_VERSION}"
+TEXT="$TEXT  kinkal@${KINKAL_VERSION}"
+TEXT="$TEXT  artdaq-core-mu2e@${ARTDAQ_CORE_MU2E_VERSION}"
+echo "$TEXT"
 [ $MUSE_VERBOSE -gt 0 ] && echo "build directory stub based on the build options:"
 echo "  MUSE_STUB = " $MUSE_STUB
 [ $MUSE_VERBOSE -gt 0 ] && echo "the grid setup file (if any):"
