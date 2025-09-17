@@ -55,6 +55,9 @@ class mu2e_helper:
             self.libstub = self.repo.lower()
         if len(self.stub) > 0:
             self.libstub = self.libstub+"_"+self.stub
+            self.pywrapstub = self.stub
+        else :
+            self.pywrapstub = self.repo
         # A few places we use ClassDef in order to enable a class
         # to be fully capable at the root prompt
         # Using ClassDef forces the dictionary to be linked with the main
@@ -76,11 +79,11 @@ class mu2e_helper:
     def dict_file(self):
         return self.dictdir+"/"+self.libstub + '_dict.cpp'
     def pywrapcc_file(self):
-        return self.pywrapccdir+"/"+self.stub + '_pywrap.cpp'
+        return self.pywrapccdir+"/"+self.pywrapstub + '_pywrap.cpp'
     def pywrapmod_file(self):
-        return self.pywrapdir+"/"+self.stub+".py"
+        return self.pywrapdir+"/"+self.pywrapstub+".py"
     def pywraplib_file(self):
-        return self.pywrapdir+"/_"+self.stub+".so"
+        return self.pywrapdir+"/_"+self.pywrapstub+".so"
     def dict_lib_file(self):
         if self.classdef : # dictionary is in the main lib
             return self.lib_file()
@@ -136,7 +139,7 @@ class mu2e_helper:
         targets = ["#/"+self.pywrapcc_file(),
                    '#/'+self.pywrapmod_file() ]
 
-        self.env.PyWrapSource(targets,sources,MODULE=self.stub,OUTDIR=self.pywrapdir)
+        self.env.PyWrapSource(targets,sources,MODULE=self.pywrapstub,OUTDIR=self.pywrapdir)
 
         # now also make a shared library for the cc file
         sources = ["#/"+self.pywrapcc_file()]
