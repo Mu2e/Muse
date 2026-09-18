@@ -174,7 +174,7 @@ def collectRpath(mu2eOpts):
 
         if localrepo :
             # set RPATH of other libs relative to the lib being linked
-            paths.append( "\\\$${ORIGIN}/../../" + localrepo + "/lib" )
+            paths.append( r"\\$${ORIGIN}/../../" + localrepo + "/lib" )
         else :
             # use the full path as RPATH
             # if it is not local and not on cvmfs, it won't be relocatable
